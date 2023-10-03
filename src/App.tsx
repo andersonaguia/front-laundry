@@ -1,11 +1,14 @@
 import { CustomThemeProvider } from "./contexts/CustomTheme/CustomTheme.provider";
 import { LoggedOutUser } from "./layouts/LoggedOutUser";
+import { MachinesProvider } from "./contexts/Machines/Machines.provider";
 
 function App() {
   return (
     <>
       <CustomThemeProvider>
-        <LoggedOutUser />
+        <MachinesProvider>
+          <LoggedOutUser />
+        </MachinesProvider>
       </CustomThemeProvider>
     </>
   );
