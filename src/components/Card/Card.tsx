@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   CardStyled,
   H2Styled,
@@ -10,42 +10,29 @@ import {
 import { BiSolidWasher } from "react-icons/bi";
 import { BiSolidDryer } from "react-icons/bi";
 import { formatTime, parseISOString } from "../../utils/formatDate";
+import { useMachines } from "../../contexts/Machines/useMachines";
+import { commandMachines } from "../../contexts/Machines/Machines.interfaces";
 
-export const Card: React.FC = () => {
+interface Props {
+  machineData: commandMachines;
+}
+
+export const Card: React.FC<Props> = (props) => {
   const [isOn, setIsOn] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>(0);
-
-  useEffect(() => {
-    const targetTime = parseISOString("2023-07-03T23:00:00Z");
-
-    const interval = setInterval(() => {
-      const currentTime = new Date();
-      const difference = targetTime.getTime() - currentTime.getTime();
-      //console.log(targetTime.getTime + " << GT >> " + currentTime.getTime())
-      console.log("TAR: ", targetTime);
-      //console.log("CURR: ", currentTime);*/
-      if (difference > 0) {
-        console.log("DIFFE: ", difference);
-        setCountdown(difference);
-      } else {
-        clearInterval(interval);
-        setCountdown(0);
-      }
-    }, 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+  
+  console.log("PROPS: ", props);
 
   const handleClick = () => {
     setIsOn(!isOn);
   };
 
   return (
-    <CardStyled className={isOn ? "on" : "off"}>
-      <H2Styled className={isOn ? "on" : "off"}>Grupo 1</H2Styled>
-      <UlStyled className={isOn ? "on" : "off"}>
+    <CardStyled className={props.machineData.isOn ? "on" : "off"}>
+      <H2Styled className={props.machineData.isOn ? "on" : "off"}>
+        Grupo {props.machineData.machineGroup}
+      </H2Styled>
+      <UlStyled className={props.machineData.isOn ? "on" : "off"}>
         <li>
           Lavadora
           <BiSolidWasher size={40} />
@@ -55,12 +42,21 @@ export const Card: React.FC = () => {
           <BiSolidDryer size={40} />
         </li>
       </UlStyled>
-      <H3Styled className={isOn ? "on" : "off"}>Apartamento</H3Styled>
-      <PStyled className={isOn ? "on" : "off"}>201</PStyled>
-      <H3Styled className={isOn ? "on" : "off"}>Tempo Restante</H3Styled>
-      <PStyled className={isOn ? "on" : "off"}>{formatTime(countdown)}</PStyled>
-      <ButtonStyled onClick={handleClick} className={isOn ? "on" : "off"}>
-        {isOn ? "DESLIGAR" : "LIGAR"}
+      <H3Styled className={props.machineData.isOn ? "on" : "off"}>
+        Apartamento
+      </H3Styled>
+      <PStyled className={props.machineData.isOn ? "on" : "off"}>201</PStyled>
+      <H3Styled className={props.machineData.isOn ? "on" : "off"}>
+        Tempo Restante
+      </H3Styled>
+      <PStyled className={props.machineData.isOn ? "on" : "off"}>
+        {formatTime(countdown)}
+      </PStyled>
+      <ButtonStyled
+        onClick={handleClick}
+        className={props.machineData.isOn ? "on" : "off"}
+      >
+        {props.machineData.isOn ? "DESLIGAR" : "LIGAR"}
       </ButtonStyled>
     </CardStyled>
   );
